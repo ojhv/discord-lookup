@@ -1,0 +1,13 @@
+.badgepng {
+    height: 1.5rem;
+    margin: .2rem
+}
+
+.Avatar {
+ clip-path: circle();
+}
+
+.Banner {
+    border-radius: 18px;
+}
+ 
