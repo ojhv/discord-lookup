@@ -1,9 +1,9 @@
-<!DOCTYPE html>
 <html lang="en" class="spinozaluvzeren">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>User Lookup</title>
+  <title>Discord Lookup</title>
+  <link rel="shortcut icon" type="Lookup" href="icon-blurple.png">
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -94,7 +94,68 @@
 </head>
 <body>
   <div class="container" id="searchContainer">
-    <h1>Kullanıcı Arama</h1>
-    <input id="userIdInput" class="form-control form-control-lg" type="text" placeholder="ID Giriniz..">
-    <button onclick="fetchUser()" class="btn btn-primary">Sorgula</button>
+    <h1>Discord Lookup</h1>
+    <input id="userIdInput" class="form-control form-control-lg" type="text" placeholder="Enter ID...">
+    <button onclick="fetchUser()" class="btn btn-primary">Lookup</button>
   </div>
+  
+  <div class="wrapper">
+    <div id="userInfo" class="hidden">
+      <!-- KULLANICI BİLGİLERİ KISMI -->
+    </div>
+
+    <button id="showFormButton" onclick="showSearchForm()" class="hidden">Search New Person</button>
+    <button id="newSearchButton" onclick="showSearchContainer()" class="hidden">Search New Person</button>
+  </div>
+
+  <script>
+    function fetchUser() {
+      const userId = document.getElementById('userIdInput').value;
+
+      fetch(`https://discordlookup.mesavirep.xyz/v1/user/${userId}`)
+        .then(response => response.json())
+        .then(data => {
+          const userInfoContainer = document.getElementById('userInfo');
+          userInfoContainer.innerHTML = `
+            <h2>User Info</h2>
+            <p>ID: ${data.id}</p>
+            <p>Created: ${data.created_at}</p>
+            <p>Tag: ${data.tag}</p>
+            <p>Global Name: ${data.global_name}</p>
+            <p>Badge's: ${data.badges.join(', ')}</p>
+            <p>
+              Avatar: <img src="${data.avatar.link}" alt="Avatar" />
+            </p>
+            <p>
+              Banner: <img src="${data.banner.link}" alt="Banner" />
+            </p>
+          `;
+          document.getElementById('searchContainer').classList.add('hidden');
+          document.getElementById('userInfo').classList.add('visible');
+          document.getElementById('showFormButton').classList.remove('hidden');
+          document.getElementById('newSearchButton').classList.remove('hidden');
+        })
+        .catch(error => {
+          console.error('Hata:', error);
+          const userInfoContainer = document.getElementById('userInfo');
+          userInfoContainer.innerHTML = '<p>I can not find this User.</p>';
+          userInfoContainer.classList.add('visible');
+          document.getElementById('newSearchButton').classList.remove('hidden');
+        });
+    }
+
+    function showSearchForm() {
+      document.getElementById('searchContainer').classList.remove('hidden');
+      document.getElementById('userInfo').classList.remove('visible');
+      document.getElementById('showFormButton').classList.add('hidden');
+      document.getElementById('newSearchButton').classList.add('hidden');
+    }
+
+    function showSearchContainer() {
+      document.getElementById('searchContainer').classList.remove('hidden');
+      document.getElementById('userInfo').classList.remove('visible');
+      document.getElementById('newSearchButton').classList.add('hidden');
+    }
+  </script>
+</body>
+</html>
